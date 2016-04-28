@@ -12,9 +12,7 @@ describe 'libreswan::conn', :type => :define do
 
         context "libreswan::conn define without any parameters" do
           it do 
-            expect { 
-              should compile.with_all_deps 
-            }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
+            expect { should compile.with_all_deps }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
           end
         end
         context "libreswan::conn define with parameters" do
@@ -28,8 +26,8 @@ describe 'libreswan::conn', :type => :define do
             }
           end
           it { is_expected.to compile.with_all_deps }
-          it do is_expected.to contain_file('/etc/ipsec.d/conn1.conf').with(
-          {
+          it do 
+            is_expected.to contain_file('/etc/ipsec.d/conn1.conf').with({
             'ensure'  => 'present',
             'owner'   => 'root',
             'group'   => 'root',
@@ -51,9 +49,7 @@ describe 'libreswan::conn', :type => :define do
         }
       end
       it do 
-        expect { 
-          should compile.with_all_deps 
-        }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
+        expect { should compile.with_all_deps }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
       end
     end
   end

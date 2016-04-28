@@ -1,3 +1,23 @@
+# == Define: libreswan::conn
+#
+# Manages ipsec connections
+#
+# === Parameters
+#
+# [*ensure*] 
+#   The state of the connection file
+#   
+#   Type: Variant[Boolean, Enum['present','absent']] 
+#   Default: Present
+#
+# [*options*]
+#   The Hash of ipsec connection options
+#   
+#   Type: hash
+#
+# === Authors
+#
+# Anton Baranov <abaranov@linux.com>
 define libreswan::conn (
   Hash $options,
   Variant[Boolean, Enum['present','absent']]

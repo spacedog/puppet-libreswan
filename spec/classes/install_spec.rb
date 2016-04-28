@@ -10,9 +10,7 @@ describe 'libreswan::install' do
 
         context "libreswan::install class without any parameters" do
           it do 
-            expect { 
-              should compile.with_all_deps 
-            }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
+            expect { should compile.with_all_deps }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
           end
         end
         context "libreswan::install class with parameters" do
@@ -38,9 +36,7 @@ describe 'libreswan::install' do
         }
       end
       it do 
-        expect { 
-          should compile.with_all_deps 
-        }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
+        expect { should compile.with_all_deps }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
       end
     end
   end

@@ -1,3 +1,46 @@
+# == Class: libreswan::config
+#
+# Class is called from libreswan class to configure ipsec
+#
+# === Parameters
+#
+# [*ipsec_config*]
+#   The Hash of configs for ipsec config section.
+#   
+#   Type: Hash
+#   Default: {}
+# [*ensure*]
+#   The state of the puppet resources whithin that module
+#
+#   Type: Variant[Boolean, Enum['present','absent']]
+#   Default: present
+#
+# [*config*]
+#   Absolute path to the ipsec.conf file
+#
+#   Type: Pattern['^\/']
+#   Default: /etc/ipsec.conf
+#
+# [*configdir*]
+#   Absolute path to the ipsec.d directory
+#
+#   Type: Pattern['^\/']
+#   Default: /etc/ipsec.d
+#
+# [*config_secrets*]
+#   Absolute path to the ipsec.secrets file
+#
+#   Type: Pattern['^\/']
+#   Default: /etc/ipsec.secrets
+#
+# === Dependencies
+#
+# puppetlabs/stdin
+# puppetlabs/concat
+#
+# === Authors
+#
+# Anton Baranov <abaranov@linux.com>
 # == Class libreswan::config
 #
 # This class is called from libreswan for service config.

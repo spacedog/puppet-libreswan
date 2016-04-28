@@ -12,9 +12,7 @@ describe 'libreswan::secret', :type => :define do
 
         context "libreswan::secret define without any parameters" do
           it do 
-            expect { 
-              should compile.with_all_deps 
-            }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
+            expect { should compile.with_all_deps }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
           end
         end
         [ 'PSK', 'XAUTH', 'RSA' ].each do |type|
@@ -28,8 +26,8 @@ describe 'libreswan::secret', :type => :define do
               }
             end
             it { is_expected.to compile.with_all_deps }
-            it do is_expected.to contain_file('/etc/ipsec.d/conn1.secret').with(
-              {
+            it do 
+              is_expected.to contain_file('/etc/ipsec.d/conn1.secret').with({
                 'ensure'  => 'present',
                 'owner'   => 'root',
                 'group'   => 'root',
@@ -44,16 +42,16 @@ describe 'libreswan::secret', :type => :define do
             {
               'id'     => 'testid',
               'ensure' => 'present',
+              'type'   => 'RSA',
               'secret' => {
                 'key1' => 'value1',
                 'key2' => 'value2',
               },
-              'type'   => 'RSA',
             }
           end
           it { is_expected.to compile.with_all_deps }
-          it do is_expected.to contain_file('/etc/ipsec.d/conn1.secret').with(
-            {
+          it do 
+            is_expected.to contain_file('/etc/ipsec.d/conn1.secret').with({
               'ensure'  => 'present',
               'owner'   => 'root',
               'group'   => 'root',
@@ -69,15 +67,13 @@ describe 'libreswan::secret', :type => :define do
   context 'unsupported operating system' do
     describe 'libreswan::secret class without any parameters on Solaris/Nexenta' do
       let(:facts) do
-        {
+        {                                                        
           :osfamily        => 'Solaris',
           :operatingsystem => 'Nexenta',
         }
       end
       it do 
-        expect { 
-          should compile.with_all_deps 
-        }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
+        expect { should compile.with_all_deps }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
       end
     end
   end

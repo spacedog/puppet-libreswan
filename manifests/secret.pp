@@ -1,3 +1,39 @@
+# == Define: libreswan::secrets
+#
+# Manages secrets for ipsec connections
+#
+# === Parameters
+#
+# [*ensure*] 
+#   The state of the connection secret file
+#   
+#   Type: Variant[Boolean, Enum['present','absent']] 
+#   Default: Present
+#
+# [*secret*] 
+#   The secret for ipsec connection
+#   
+#   Type:  Variant[String,Hash] 
+#
+# [*id*]
+#   The connection id to identify the secret is for 
+#   
+#   Type: Optional[String]
+#
+# [*type*]
+#   The secret type
+#   
+#   Type: Enum['PSK','XAUTH','RSA'] 
+#   Default: PSK
+#
+# [*options*]
+#   The Hash of ipsec connection options
+#   
+#   Type: hash
+#
+# === Authors
+#
+# Anton Baranov <abaranov@linux.com>
 define libreswan::secret (
   Variant[String,Hash] $secret,
   Optional[String]     $id = undef,

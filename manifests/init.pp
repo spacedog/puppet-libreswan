@@ -1,15 +1,71 @@
-# Class: libreswan
-# ===========================
+# == Class: libreswan
 #
-# Full description of class libreswan here.
+# Class manages libreswan config, install and ipsec connections and secrets
 #
-# Parameters
-# ----------
+# === Parameters
 #
-# * `sample parameter`
-#   Explanation of what this parameter affects and what it defaults to.
-#   e.g. "Specify one or more upstream ntp servers as an array."
+# [*ensure*]
+#   The state of the puppet resources whithin that module
 #
+#   Type: Variant[Boolean, Enum['present','absent']]
+#   Default: present
+#
+# [*package_name*]
+#   The name of the package that provides libreswan
+#
+#   Type: String
+#   Default: libreswan
+#
+# [*package_ensure*]
+#   The state of the libreswan package in the system
+#
+#   Type: Variant[Boolean, Enum['installed', 'latest']] 
+#   Default: installed
+# 
+# [*service_name*]
+#   The name of the service that provides ipsec
+#
+#   Type: String
+#   Default: ipsec
+#
+# [*service_ensure*]
+#   The state of the libreswan service in the system
+#
+#   Type: Variant[Boolean, Enum['stopped', 'running']] 
+#   Default: running
+# 
+# [*service_enable*]
+#   Define if the service is started during the boot process
+#
+#   Type: Variant[Boolean, Enum['manual','mask']] 
+#   Default: true
+#
+# [*config*]
+#   Absolute path to the ipsec.conf file
+#
+#   Type: Pattern['^\/']
+#   Default: /etc/ipsec.conf
+#
+# [*configdir*]
+#   Absolute path to the ipsec.d directory
+#
+#   Type: Pattern['^\/']
+#   Default: /etc/ipsec.d
+#
+# [*config_secrets*]
+#   Absolute path to the ipsec.secrets file
+#
+#   Type: Pattern['^\/']
+#   Default: /etc/ipsec.secrets
+#
+# === Dependencies
+#
+# puppetlabs/stdin
+# puppetlabs/concat
+#
+# === Authors
+#
+# Anton Baranov <abaranov@linux.com>
 class libreswan (
   Variant[Boolean, Enum['present','absent']]
     $ensure                       = $::libreswan::params::ensure,
