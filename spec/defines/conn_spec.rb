@@ -26,6 +26,7 @@ describe 'libreswan::conn', :type => :define do
             }
           end
           it { is_expected.to compile.with_all_deps }
+          it { is_expected.to contain_class('libreswan') }
           it do 
             is_expected.to contain_file('/etc/ipsec.d/conn1.conf').with({
             'ensure'  => 'present',

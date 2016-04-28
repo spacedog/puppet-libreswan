@@ -25,6 +25,7 @@ describe 'libreswan::secret', :type => :define do
                 'type'   => "#{type}",
               }
             end
+            it { is_expected.to contain_class('libreswan') }
             it { is_expected.to compile.with_all_deps }
             it do 
               is_expected.to contain_file('/etc/ipsec.d/conn1.secret').with({

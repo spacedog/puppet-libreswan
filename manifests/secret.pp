@@ -43,9 +43,7 @@ define libreswan::secret (
     $type = 'PSK',
 ) {
 
-  if ! defined(Class['::libreswan']) {
-    fail('Include libreswan class before using any libreswan defined resources')
-  }
+  include ::libreswan
 
   file { "${::libreswan::configdir}/${title}.secret":
     ensure    => $ensure,

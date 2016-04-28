@@ -24,9 +24,7 @@ define libreswan::conn (
     $ensure = 'present',
 ) {
 
-  if ! defined(Class['::libreswan']) {
-    fail('Include libreswan class before using any libreswan defined resources')
-  }
+  include ::libreswan
 
   $_target = "${::libreswan::configdir}/${title}.conf"
 
