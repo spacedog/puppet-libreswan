@@ -80,6 +80,7 @@ class libreswan (
   Pattern['^\/'] $config          = $::libreswan::params::config,
   Pattern['^\/'] $configdir       = $::libreswan::params::configdir,
   Pattern['^\/'] $config_secrets  = $::libreswan::params::config_secrets,
+  Boolean        $purge_configdir = $::libreswan::params::purge_configdir,
   Hash           $ipsec_config    = $::libreswan::params::ipsec_config,
 ) inherits ::libreswan::params {
 
@@ -88,11 +89,12 @@ class libreswan (
     package_ensure => $package_ensure,
   }
   class { '::libreswan::config':
-    ensure         => $ensure,
-    ipsec_config   => $ipsec_config,
-    config         => $config,
-    configdir      => $configdir,
-    config_secrets => $config_secrets,
+    ensure          => $ensure,
+    ipsec_config    => $ipsec_config,
+    config          => $config,
+    configdir       => $configdir,
+    config_secrets  => $config_secrets,
+    purge_configdir => $purge_configdir,
   }
   class { '::libreswan::service':
     service_name   => $service_name,

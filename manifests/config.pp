@@ -33,6 +33,12 @@
 #   Type: Pattern['^\/']
 #   Default: /etc/ipsec.secrets
 #
+# [*purge_configdir*]
+#   Remove or not all unmanaged files from configdur
+#
+#   Type: Boolean
+#   Default: false
+#
 # === Dependencies
 #
 # puppetlabs/stdin
@@ -52,6 +58,7 @@ class libreswan::config(
   Pattern['^\/'] $config,
   Pattern['^\/'] $configdir,
   Pattern['^\/'] $config_secrets,
+  Boolean        $purge_configdir,
 ){
   # ipsec.conf 
   concat {$config:
@@ -102,5 +109,12 @@ class libreswan::config(
     owner  => 'root',
     group  => 'root',
     mode   => '0700',
+  }
+  if $purge_configdir == true {
+    File[$configdir] {
+      recurse      => true,
+      purge        => true,
+      recurselimit => 1,
+    }
   }
 }

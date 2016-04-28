@@ -16,13 +16,14 @@ describe 'libreswan::config' do
         context "libreswan::config class with parameters" do
           let (:params) do
             {
-              'ensure'         => 'present',
-              'config'         => '/etc/ipsec.conf',
-              'configdir'      => '/etc/ipsec.d',
-              'config_secrets' => '/etc/ipsec.secrets',
-              'ipsec_config'   => {
-                'key'          => 'value',
-              }
+              'ensure'          => 'present',
+              'config'          => '/etc/ipsec.conf',
+              'configdir'       => '/etc/ipsec.d',
+              'config_secrets'  => '/etc/ipsec.secrets',
+              'ipsec_config'    => {
+                'key' => 'value',
+              },
+              'purge_configdir' => false,
             }
           end
           it { is_expected.to compile.with_all_deps }

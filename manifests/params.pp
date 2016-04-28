@@ -10,6 +10,7 @@ class libreswan::params {
   $service_ensure  = 'running'
   $service_enable  = true
   $ipsec_config    = {}
+  $purge_configdir = false
   # OS Specific variables
   case $::osfamily {
     'Debian': {
