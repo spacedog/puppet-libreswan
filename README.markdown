@@ -146,6 +146,13 @@ Type: Pattern['^\/']
 
 Default: /etc/ipsec.secrets
 
+#### [*purge_configdir*]
+Remove or not all unmanaged files from configdur
+
+Type: Boolean
+
+Default: false
+
 ### `libreswan::conn`
 
 #### [*ensure*] 
