@@ -1,4 +1,4 @@
-#### Table of Contents
+#### Table of Contents [![Build Status](https://travis-ci.org/spacedog/puppet-libreswan.svg?branch=master)](https://travis-ci.org/spacedog/puppet-libreswan)
 
 1. [Overview](#overview)
 2. [Module Description - What the module does and why it is useful](#module-description)
