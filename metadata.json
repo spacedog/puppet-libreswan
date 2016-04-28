@@ -2,15 +2,19 @@
   "name": "abaranov-libreswan",
   "version": "0.1.0",
   "author": "abaranov",
-  "summary": "",
+  "summary": "Module to configure libreswan",
   "license": "Apache-2.0",
-  "source": "",
-  "project_page": "",
-  "issues_url": "",
+  "source": "https://github.com/spacedog/puppet-libreswan",
+  "project_page": "https://github.com/spacedog/puppet-libreswan",
+  "issues_url": "https://github.com/spacedog/puppet-libreswan/issues",
   "dependencies": [
     {
       "name": "puppetlabs-stdlib",
-      "version_requirement": ">= 1.0.0"
+      "version_requirement": ">=4.11.0 <5.0.0"
+    },
+    {
+      "name": "puppetlabs-concat",
+      "version_requirement": ">=1.2.3 <2.0.0"
     }
   ],
   "operatingsystem_support": [

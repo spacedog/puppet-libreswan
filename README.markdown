@@ -1,60 +1,196 @@
-#### Table of Contents [![Build Status](https://travis-ci.org/spacedog/puppet-libreswan.svg?branch=master)](https://travis-ci.org/spacedog/puppet-libreswan)
+# libreswan #
+#### Table of Contents 
 
 1. [Overview](#overview)
-2. [Module Description - What the module does and why it is useful](#module-description)
-3. [Setup - The basics of getting started with libreswan](#setup)
-    * [What libreswan affects](#what-libreswan-affects)
-    * [Setup requirements](#setup-requirements)
-    * [Beginning with libreswan](#beginning-with-libreswan)
-4. [Usage - Configuration options and additional functionality](#usage)
-5. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
-5. [Limitations - OS compatibility, etc.](#limitations)
-6. [Development - Guide for contributing to the module](#development)
+2. [Setup](#setup)
+3. [Usage](#usage)
+4. [Reference](#reference)
+5. [Limitations](#limitations)
 
 ## Overview
 
-A one-maybe-two sentence summary of what the module does/what problem it solves. This is your 30 second elevator pitch for your module. Consider including OS/Puppet version it works with.       
+[![Build Status](https://travis-ci.org/spacedog/puppet-libreswan.svg?branch=master)](https://travis-ci.org/spacedog/puppet-libreswan)
 
-## Module Description
-
-If applicable, this section should have a brief description of the technology the module integrates with and what that integration enables. This section should answer the questions: "What does this module *do*?" and "Why would I use it?"
-
-If your module has a range of functionality (installation, configuration, management, etc.) this is the time to mention it.
+Module installs, configures libreswan - a free software implementation of the most widely supported and standarized VPN protocol based on ("IPsec") and the Internet Key Exchange ("IKE").
 
 ## Setup
 
-### What libreswan affects
+For a basic use just include libreswan class into the manifest:
+```puppet
+class { 'libreswan': } 
+```
 
-* A list of files, packages, services, or operations that the module will alter, impact, or execute on the system it's installed on.
-* This is a great place to stick any warnings.
-* Can be in list or paragraph form. 
-
-### Setup Requirements **OPTIONAL**
-
-If your module requires anything extra before setting up (pluginsync enabled, etc.), mention it here. 
-
-### Beginning with libreswan
-
-The very basic steps needed for a user to get the module up and running. 
-
-If your most recent release breaks compatibility or requires particular steps for upgrading, you may wish to include an additional section here: Upgrading (For an example, see http://forge.puppetlabs.com/puppetlabs/firewall).
 
 ## Usage
 
-Put the classes, types, and resources for customizing, configuring, and doing the fancy stuff with your module here. 
+To configure ipsec options (config setup seciton in ipsec.conf file) the
+ipsec_config hash should be used:
+```puppet
+$ipsec_config = {
+  <key>       => <value>,
+}
+
+class {'libreswan':
+  ipsec_config => $ipsec_config,
+}
+```
+
+To manage ipsec connection the libreswan::conn defined type should be used 
+```yaml
+libreswan::conns:
+  snt:
+    left: 10.11.11.1
+    leftsubnet: 10.0.1.0/24
+    leftnexthop: 172.16.55.66
+    leftsourceip: 10.0.1.1
+    right: 192.168.22.1
+    rightsubnet: 10.0.2.0/24
+    rightnexthop: 172.16.88.99
+    rightsourceip: 10.0.2.1
+    keyingtries: %forever
+```
+Then use create_resources function to create connection: 
+```puppet
+create_resources('libreswan::conn', $conns)
+```
+
+To manage ipsec secrets the libreswan::secret type is used:
+```yaml
+libreswan::secrets:
+  'conn1':
+    ensure: 'present'
+    id: '10.0.0.1 192.168.0.1'
+    type: 'PSK'
+    secret: 'test'
+  'conn2':
+    ensure: 'present'
+    type: RSA
+    secret:
+      PublicExponent: 0x03
+      PrivateExponent: 0x316e6593...
+      Prime1: 0x316e6593...
+      Prime2: 0x316e6593...
+      Exponent1: 0x316e6593...
+      Exponent2: 0x316e6593...
+      Coefficient: 0x316e6593...
+      CKAIDNSS: 0x316e6593...
+```
+```puppet
+create_resources('libreswan::secrets', $secrets)
+```
 
 ## Reference
 
-Here, list the classes, types, providers, facts, etc contained in your module. This section should include all of the under-the-hood workings of your module so people know what the module is touching on their system but don't need to mess with things. (We are working on automating this section!)
+### `libreswan`
+
+#### [*ensure*]
+The state of the puppet resources whithin that module
+
+Type: Variant[Boolean, Enum['present','absent']]
+
+Default: present
+
+####  [*package_name*]
+The name of the package that provides libreswan
+
+Type: String
+
+Default: libreswan
+
+#### [*package_ensure*]
+The state of the libreswan package in the system
+
+Type: Variant[Boolean, Enum['installed', 'latest']] 
+
+Default: installed
+ 
+#### [*service_name*]
+The name of the service that provides ipsec
+
+Type: String
+
+Default: ipsec
+
+#### [*service_ensure*]
+The state of the libreswan service in the system
+
+Type: Variant[Boolean, Enum['stopped', 'running']] 
+
+Default: running
+ 
+####  [*service_enable*]
+Define if the service is started during the boot process
+
+Type: Variant[Boolean, Enum['manual','mask']] 
+
+Default: true
+
+#### [*config*]
+Absolute path to the ipsec.conf file
+
+Type: Pattern['^\/']
+
+Default: /etc/ipsec.conf
+
+#### [*configdir*]
+Absolute path to the ipsec.d directory
+
+Type: Pattern['^\/']
+
+Default: /etc/ipsec.d
+
+#### [*config_secrets*]
+Absolute path to the ipsec.secrets file
+
+Type: Pattern['^\/']
+
+Default: /etc/ipsec.secrets
+
+### `libreswan::conn`
+
+#### [*ensure*] 
+The state of the connection file
+
+Type: Variant[Boolean, Enum['present','absent']] 
+
+Default: Present
+
+#### [*options*]
+The Hash of ipsec connection options
+
+Type: hash
+
+### `libreswan::secret`
+
+#### [*ensure*] 
+The state of the connection secret file
+
+Type: Variant[Boolean, Enum['present','absent']] 
+
+Default: Present
+
+#### [*secret*] 
+The secret for ipsec connection
+
+Type:  Variant[String,Hash] 
+
+#### [*id*]
+The connection id to identify the secret is for 
+
+Type: Optional[String]
+
+#### [*type*]
+The secret type
+
+Type: Enum['PSK','XAUTH','RSA'] 
+
+Default: PSK
+
+#### [*options*]
+The Hash of ipsec connection options
+
+Type: hash
 
 ## Limitations
 
-This is where you list OS compatibility, version compatibility, etc.
-
-## Development
-
-Since your module is awesome, other users will want to play with it. Let them know what the ground rules for contributing are.
-
-## Release Notes/Contributors/Etc **Optional**
-
-If you aren't using changelog, put your release notes here (though you should consider using changelog). You may also add any additional sections you feel are necessary or important to include here. Please use the `## ` header. 
+Puppet4
