@@ -1,0 +1,6 @@
+
+
+config setup
+<% @ipsec_config.each do |key,value| -%>
+  <%= key %>=<%= value %>
+<% end %>
