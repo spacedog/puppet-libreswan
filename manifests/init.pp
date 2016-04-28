@@ -104,5 +104,7 @@ class libreswan (
   contain '::libreswan::config'
   contain '::libreswan::service'
 
-  Class['::libreswan::config'] ~> Class['::libreswan::service']
+  Class['::libreswan::install'] ->
+  Class['::libreswan::config'] ~>
+  Class['::libreswan::service']
 }

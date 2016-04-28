@@ -13,7 +13,7 @@ describe 'libreswan' do
 
           it { is_expected.to contain_class('libreswan::params') }
           it { is_expected.to contain_class('libreswan::install') }
-          it { is_expected.to contain_class('libreswan::config') }
+          it { is_expected.to contain_class('libreswan::config').that_requires('Class[libreswan::install]') }
           it { is_expected.to contain_class('libreswan::service').that_subscribes_to('libreswan::config') }
         end
       end
