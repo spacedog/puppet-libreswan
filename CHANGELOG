@@ -1,2 +1,6 @@
+2016-04-28 Release 0.2.0
+- Add dependency between install and config classes
+- Include libreswan class inside defined types
+- Add possibility to purge configdir
 2016-04-28 Release 0.1.0
 - Libreswan puppet module first release
