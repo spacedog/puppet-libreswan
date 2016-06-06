@@ -6,7 +6,7 @@
 #
 # [*ipsec_config*]
 #   The Hash of configs for ipsec config section.
-#   
+#
 #   Type: Hash
 #   Default: {}
 # [*ensure*]
@@ -60,7 +60,7 @@ class libreswan::config(
   Pattern['^\/'] $config_secrets,
   Boolean        $purge_configdir,
 ){
-  # ipsec.conf 
+  # ipsec.conf
   concat {$config:
     ensure => $ensure,
     owner  => 'root',
@@ -100,7 +100,7 @@ class libreswan::config(
       $_densure = 'directory'
     }
     default: {
-      $densure = 'absent'
+      $_densure = 'absent'
     }
 
   }
