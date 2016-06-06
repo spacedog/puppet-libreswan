@@ -1,6 +1,6 @@
 {
   "name": "abaranov-libreswan",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": "abaranov",
   "summary": "Module to configure libreswan",
   "license": "Apache-2.0",
