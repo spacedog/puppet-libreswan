@@ -11,7 +11,7 @@ describe 'libreswan::secret', :type => :define do
         end
 
         context "libreswan::secret define without any parameters" do
-          it do 
+          it do
             expect { should compile.with_all_deps }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
           end
         end
@@ -22,12 +22,12 @@ describe 'libreswan::secret', :type => :define do
                 'id'     => 'testid',
                 'ensure' => 'present',
                 'secret' => 'passphrase',
-                'type'   => "#{type}",
+                'type'   => type.to_s,
               }
             end
             it { is_expected.to contain_class('libreswan') }
             it { is_expected.to compile.with_all_deps }
-            it do 
+            it do
               is_expected.to contain_file('/etc/ipsec.d/conn1.secret').with({
                 'ensure'  => 'present',
                 'owner'   => 'root',
@@ -51,7 +51,7 @@ describe 'libreswan::secret', :type => :define do
             }
           end
           it { is_expected.to compile.with_all_deps }
-          it do 
+          it do
             is_expected.to contain_file('/etc/ipsec.d/conn1.secret').with({
               'ensure'  => 'present',
               'owner'   => 'root',
@@ -68,12 +68,12 @@ describe 'libreswan::secret', :type => :define do
   context 'unsupported operating system' do
     describe 'libreswan::secret class without any parameters on Solaris/Nexenta' do
       let(:facts) do
-        {                                                        
+        {
           :osfamily        => 'Solaris',
           :operatingsystem => 'Nexenta',
         }
       end
-      it do 
+      it do
         expect { should compile.with_all_deps }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
       end
     end
