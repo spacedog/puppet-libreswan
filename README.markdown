@@ -125,6 +125,13 @@ Type: Variant[Boolean, Enum['manual','mask']]
 
 Default: true
 
+####  [*manage_service*]
+Define if puppet manages service for you
+
+Type: Boolean
+
+Default: true
+
 #### [*config*]
 Absolute path to the ipsec.conf file
 
