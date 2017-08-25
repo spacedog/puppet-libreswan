@@ -19,9 +19,9 @@
 # [*package_ensure*]
 #   The state of the libreswan package in the system
 #
-#   Type: Variant[Boolean, Enum['installed', 'latest']] 
+#   Type: Variant[Boolean, Enum['installed', 'latest']]
 #   Default: installed
-# 
+#
 # [*service_name*]
 #   The name of the service that provides ipsec
 #
@@ -31,13 +31,13 @@
 # [*service_ensure*]
 #   The state of the libreswan service in the system
 #
-#   Type: Variant[Boolean, Enum['stopped', 'running']] 
+#   Type: Variant[Boolean, Enum['stopped', 'running']]
 #   Default: running
-# 
+#
 # [*service_enable*]
 #   Define if the service is started during the boot process
 #
-#   Type: Variant[Boolean, Enum['manual','mask']] 
+#   Type: Variant[Boolean, Enum['manual','mask']]
 #   Default: true
 #
 # [*config*]
@@ -77,6 +77,7 @@ class libreswan (
     $service_ensure               = $::libreswan::params::service_ensure,
   Variant[Boolean, Enum['manual','mask']]
     $service_enable               = $::libreswan::params::service_enable,
+  Boolean        $manage_service  = $::libreswan::params::manage_service,
   Pattern['^\/'] $config          = $::libreswan::params::config,
   Pattern['^\/'] $configdir       = $::libreswan::params::configdir,
   Pattern['^\/'] $config_secrets  = $::libreswan::params::config_secrets,
@@ -96,15 +97,17 @@ class libreswan (
     config_secrets  => $config_secrets,
     purge_configdir => $purge_configdir,
   }
-  class { '::libreswan::service':
-    service_name   => $service_name,
-    service_ensure => $service_ensure,
-    service_enable => $service_enable,
+  if $manage_service {
+    class { '::libreswan::service':
+      service_name   => $service_name,
+      service_ensure => $service_ensure,
+      service_enable => $service_enable,
+      subscribe      => Class['::libreswan::config'],
+    }
   }
 
-  contain '::libreswan::install'
-  contain '::libreswan::config'
-  contain '::libreswan::service'
 
-  Class['::libreswan::install'] -> Class['::libreswan::config'] ~> Class['::libreswan::service']
+  Class[::libreswan::install] -> Class[::libreswan::config]
+
+
 }

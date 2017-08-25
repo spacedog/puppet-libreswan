@@ -9,7 +9,7 @@ describe 'libreswan::service' do
         end
 
         context "libreswan::service class without any parameters" do
-          it do 
+          it do
             expect { should compile.with_all_deps }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
           end
         end
@@ -22,7 +22,7 @@ describe 'libreswan::service' do
             }
           end
           it { is_expected.to compile.with_all_deps }
-          it do 
+          it do
             is_expected.to contain_service('ipsec').with({
             'ensure' => 'running',
             'enable' => true,

@@ -4,10 +4,11 @@
 # It sets variables according to platform.
 #
 class libreswan::params {
-  # Default variables  
+  # Default variables
   $ensure          = 'present'
   $package_ensure  = 'installed'
   $service_ensure  = 'running'
+  $manage_service  = true
   $service_enable  = true
   $ipsec_config    = {}
   $purge_configdir = false
