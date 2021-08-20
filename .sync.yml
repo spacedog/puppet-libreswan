@@ -1,0 +1,21 @@
+appveyor.yml:
+  delete: true
+.gitlab-ci.yml:
+  delete: true
+hiera.yaml:
+  delete: true
+data/common.yaml:
+  delete: true
+CHANGELOG.md:
+  delete: true
+.travis.yml:
+  branches:
+    - '---main'
+    - master
+Gemfile:
+  required:
+    ':development': 
+        # Install rubocop-perfomance
+      - gem: rubocop-performance
+        condition: "Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new('2.5.0')"
+        

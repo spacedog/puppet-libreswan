@@ -8,13 +8,13 @@ describe 'libreswan::config' do
           facts
         end
 
-        context "libreswan::config class without any parameters" do
+        context 'libreswan::config class without any parameters' do
           it do
-            expect { should compile.with_all_deps }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
+            expect { is_expected.to compile.with_all_deps }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
           end
         end
-        context "libreswan::config class with parameters and ensure=present" do
-          let (:params) do
+        context 'libreswan::config class with parameters and ensure=present' do
+          let(:params) do
             {
               'ensure'          => 'present',
               'config'          => '/etc/ipsec.conf',
@@ -26,6 +26,7 @@ describe 'libreswan::config' do
               'purge_configdir' => false,
             }
           end
+
           it { is_expected.to compile.with_all_deps }
           it { is_expected.to contain_file('/etc/ipsec.secrets').with_ensure('present') }
           it { is_expected.to contain_file('/etc/ipsec.secrets').with_content("include /etc/ipsec.d/*.secret\n") }
@@ -33,25 +34,25 @@ describe 'libreswan::config' do
           it { is_expected.to contain_concat('/etc/ipsec.conf').with_ensure('present') }
           it do
             is_expected.to contain_concat_fragment('/etc/ipsec.conf_setup').with({
-              'target'  => '/etc/ipsec.conf',
+                                                                                   'target' => '/etc/ipsec.conf',
               'content' => "\n\nconfig setup\n  key=value\n\n",
-            })
+                                                                                 })
           end
           it do
             is_expected.to contain_concat_fragment('/etc/ipsec.conf_HEADER').with({
-              'target'  => '/etc/ipsec.conf',
+                                                                                    'target'  => '/etc/ipsec.conf',
               'content' => '# File is managed by puppet\n',
-            })
+                                                                                  })
           end
           it do
             is_expected.to contain_concat_fragment('/etc/ipsec.conf_FOOTER').with({
-              'target'  => '/etc/ipsec.conf',
+                                                                                    'target'  => '/etc/ipsec.conf',
               'content' => "include /etc/ipsec.d/*.conf\n",
-            })
+                                                                                  })
           end
         end
-        context "libreswan::config class with parameters and ensure=absent" do
-          let (:params) do
+        context 'libreswan::config class with parameters and ensure=absent' do
+          let(:params) do
             {
               'ensure'          => 'absent',
               'config'          => '/etc/ipsec.conf',
@@ -63,6 +64,7 @@ describe 'libreswan::config' do
               'purge_configdir' => false,
             }
           end
+
           it { is_expected.to compile.with_all_deps }
           it { is_expected.to contain_file('/etc/ipsec.secrets').with_ensure('absent') }
           it { is_expected.to contain_file('/etc/ipsec.d').with_ensure('absent') }
@@ -76,12 +78,13 @@ describe 'libreswan::config' do
     describe 'libreswan::config class without any parameters on Solaris/Nexenta' do
       let(:facts) do
         {
-          :osfamily        => 'Solaris',
-          :operatingsystem => 'Nexenta',
+          osfamily: 'Solaris',
+          operatingsystem: 'Nexenta',
         }
       end
+
       it do
-        expect { should compile.with_all_deps }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
+        expect { is_expected.to compile.with_all_deps }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
       end
     end
   end

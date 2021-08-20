@@ -8,25 +8,26 @@ describe 'libreswan::service' do
           facts
         end
 
-        context "libreswan::service class without any parameters" do
+        context 'libreswan::service class without any parameters' do
           it do
-            expect { should compile.with_all_deps }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
+            expect { is_expected.to compile.with_all_deps }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
           end
         end
-        context "libreswan::service class with parameters" do
-          let (:params) do
+        context 'libreswan::service class with parameters' do
+          let(:params) do
             {
               'service_name'   => 'ipsec',
               'service_ensure' => 'running',
               'service_enable' => true,
             }
           end
+
           it { is_expected.to compile.with_all_deps }
           it do
             is_expected.to contain_service('ipsec').with({
-            'ensure' => 'running',
+                                                           'ensure' => 'running',
             'enable' => true,
-          })
+                                                         })
           end
         end
       end
@@ -37,12 +38,13 @@ describe 'libreswan::service' do
     describe 'libreswan::service class without any parameters on Solaris/Nexenta' do
       let(:facts) do
         {
-          :osfamily        => 'Solaris',
-          :operatingsystem => 'Nexenta',
+          osfamily: 'Solaris',
+          operatingsystem: 'Nexenta',
         }
       end
-      it do 
-        expect { should compile.with_all_deps }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
+
+      it do
+        expect { is_expected.to compile.with_all_deps }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
       end
     end
   end
