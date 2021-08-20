@@ -1,117 +1,208 @@
 # libreswan [![Build Status](https://app.travis-ci.com/spacedog/puppet-libreswan.svg?branch=master)](https://app.travis-ci.com/spacedog/puppet-libreswan)
+#### Table of Contents 
 
-Welcome to your new module. A short overview of the generated parts can be found
-in the [PDK documentation][1].
+1. [Overview](#overview)
+2. [Setup](#setup)
+3. [Usage](#usage)
+4. [Reference](#reference)
+5. [Limitations](#limitations)
 
-The README template below provides a starting point with details about what
-information to include in your README.
+## Overview
 
-## Table of Contents
-
-1. [Description](#description)
-1. [Setup - The basics of getting started with libreswan](#setup)
-    * [What libreswan affects](#what-libreswan-affects)
-    * [Setup requirements](#setup-requirements)
-    * [Beginning with libreswan](#beginning-with-libreswan)
-1. [Usage - Configuration options and additional functionality](#usage)
-1. [Limitations - OS compatibility, etc.](#limitations)
-1. [Development - Guide for contributing to the module](#development)
-
-## Description
-
-Briefly tell users why they might want to use your module. Explain what your
-module does and what kind of problems users can solve with it.
-
-This should be a fairly short description helps the user decide if your module
-is what they want.
+Module installs, configures libreswan - a free software implementation of the most widely supported and standarized VPN protocol based on ("IPsec") and the Internet Key Exchange ("IKE").
 
 ## Setup
 
-### What libreswan affects **OPTIONAL**
+For a basic use just include libreswan class into the manifest:
+```puppet
+class { 'libreswan': } 
+```
 
-If it's obvious what your module touches, you can skip this section. For
-example, folks can probably figure out that your mysql_instance module affects
-their MySQL instances.
-
-If there's more that they should know about, though, this is the place to
-mention:
-
-* Files, packages, services, or operations that the module will alter, impact,
-  or execute.
-* Dependencies that your module automatically installs.
-* Warnings or other important notices.
-
-### Setup Requirements **OPTIONAL**
-
-If your module requires anything extra before setting up (pluginsync enabled,
-another module, etc.), mention it here.
-
-If your most recent release breaks compatibility or requires particular steps
-for upgrading, you might want to include an additional "Upgrading" section here.
-
-### Beginning with libreswan
-
-The very basic steps needed for a user to get the module up and running. This
-can include setup steps, if necessary, or it can be an example of the most basic
-use of the module.
 
 ## Usage
 
-Include usage examples for common use cases in the **Usage** section. Show your
-users how to use your module to solve problems, and be sure to include code
-examples. Include three to five examples of the most important or common tasks a
-user can accomplish with your module. Show users how to accomplish more complex
-tasks that involve different types, classes, and functions working in tandem.
+To configure ipsec options (config setup seciton in ipsec.conf file) the
+ipsec_config hash should be used:
+```puppet
+$ipsec_config = {
+  <key>       => <value>,
+}
+
+class {'libreswan':
+  ipsec_config => $ipsec_config,
+}
+```
+
+To manage ipsec connection the libreswan::conn defined type should be used 
+```yaml
+libreswan::conns:
+  snt:
+    left: 10.11.11.1
+    leftsubnet: 10.0.1.0/24
+    leftnexthop: 172.16.55.66
+    leftsourceip: 10.0.1.1
+    right: 192.168.22.1
+    rightsubnet: 10.0.2.0/24
+    rightnexthop: 172.16.88.99
+    rightsourceip: 10.0.2.1
+    keyingtries: %forever
+```
+Then use create_resources function to create connection: 
+```puppet
+create_resources('libreswan::conn', $conns)
+```
+
+To manage ipsec secrets the libreswan::secret type is used:
+```yaml
+libreswan::secrets:
+  'conn1':
+    ensure: 'present'
+    id: '10.0.0.1 192.168.0.1'
+    type: 'PSK'
+    secret: 'test'
+  'conn2':
+    ensure: 'present'
+    type: RSA
+    secret:
+      PublicExponent: 0x03
+      PrivateExponent: 0x316e6593...
+      Prime1: 0x316e6593...
+      Prime2: 0x316e6593...
+      Exponent1: 0x316e6593...
+      Exponent2: 0x316e6593...
+      Coefficient: 0x316e6593...
+      CKAIDNSS: 0x316e6593...
+```
+```puppet
+create_resources('libreswan::secrets', $secrets)
+```
 
 ## Reference
 
-This section is deprecated. Instead, add reference information to your code as
-Puppet Strings comments, and then use Strings to generate a REFERENCE.md in your
-module. For details on how to add code comments and generate documentation with
-Strings, see the [Puppet Strings documentation][2] and [style guide][3].
+### `libreswan`
 
-If you aren't ready to use Strings yet, manually create a REFERENCE.md in the
-root of your module directory and list out each of your module's classes,
-defined types, facts, functions, Puppet tasks, task plans, and resource types
-and providers, along with the parameters for each.
+#### [*ensure*]
+The state of the puppet resources whithin that module
 
-For each element (class, defined type, function, and so on), list:
+Type: Variant[Boolean, Enum['present','absent']]
 
-* The data type, if applicable.
-* A description of what the element does.
-* Valid values, if the data type doesn't make it obvious.
-* Default value, if any.
+Default: present
 
-For example:
+####  [*package_name*]
+The name of the package that provides libreswan
 
-```
-### `pet::cat`
+Type: String
 
-#### Parameters
+Default: libreswan
 
-##### `meow`
+#### [*package_ensure*]
+The state of the libreswan package in the system
 
-Enables vocalization in your cat. Valid options: 'string'.
+Type: Variant[Boolean, Enum['installed', 'latest']] 
 
-Default: 'medium-loud'.
-```
+Default: installed
+ 
+#### [*service_name*]
+The name of the service that provides ipsec
+
+Type: String
+
+Default: ipsec
+
+#### [*service_ensure*]
+The state of the libreswan service in the system
+
+Type: Variant[Boolean, Enum['stopped', 'running']] 
+
+Default: running
+ 
+####  [*service_enable*]
+Define if the service is started during the boot process
+
+Type: Variant[Boolean, Enum['manual','mask']] 
+
+Default: true
+
+####  [*manage_service*]
+Define if puppet manages service for you
+
+Type: Boolean
+
+Default: true
+
+#### [*config*]
+Absolute path to the ipsec.conf file
+
+Type: Pattern['^\/']
+
+Default: /etc/ipsec.conf
+
+#### [*configdir*]
+Absolute path to the ipsec.d directory
+
+Type: Pattern['^\/']
+
+Default: /etc/ipsec.d
+
+#### [*config_secrets*]
+Absolute path to the ipsec.secrets file
+
+Type: Pattern['^\/']
+
+Default: /etc/ipsec.secrets
+
+#### [*purge_configdir*]
+Remove or not all unmanaged files from configdur
+
+Type: Boolean
+
+Default: false
+
+### `libreswan::conn`
+
+#### [*ensure*] 
+The state of the connection file
+
+Type: Variant[Boolean, Enum['present','absent']] 
+
+Default: Present
+
+#### [*options*]
+The Hash of ipsec connection options
+
+Type: hash
+
+### `libreswan::secret`
+
+#### [*ensure*] 
+The state of the connection secret file
+
+Type: Variant[Boolean, Enum['present','absent']] 
+
+Default: Present
+
+#### [*secret*] 
+The secret for ipsec connection
+
+Type:  Variant[String,Hash] 
+
+#### [*id*]
+The connection id to identify the secret is for 
+
+Type: Optional[String]
+
+#### [*type*]
+The secret type
+
+Type: Enum['PSK','XAUTH','RSA'] 
+
+Default: PSK
+
+#### [*options*]
+The Hash of ipsec connection options
+
+Type: hash
 
 ## Limitations
 
-In the Limitations section, list any incompatibilities, known issues, or other
-warnings.
-
-## Development
-
-In the Development section, tell other users the ground rules for contributing
-to your project and how they should submit their work.
-
-## Release Notes/Contributors/Etc. **Optional**
-
-If you aren't using changelog, put your release notes here (though you should
-consider using changelog). You can also add any additional sections you feel are
-necessary or important to include here. Please use the `##` header.
-
-[1]: https://puppet.com/docs/pdk/latest/pdk_generating_modules.html
-[2]: https://puppet.com/docs/puppet/latest/puppet_strings.html
-[3]: https://puppet.com/docs/puppet/latest/puppet_strings_style.html
+Puppet4
